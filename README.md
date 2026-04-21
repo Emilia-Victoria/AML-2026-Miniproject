@@ -8,7 +8,7 @@ This repository contains our miniproject for the course **Advanced Machine Learn
 
 ## Dataset
 
-Our dataset consists of unlabelled images of Animal Crossing villagers collected from [kaggle](https://www.kaggle.com/datasets/jahysama/animal-crossing-new-horizons-all-villagers/data). A limitation of our dataset is its rather small size. Another issue is that the images have varying resolution.
+Our dataset consists of unlabelled images of Animal Crossing villagers collected from [kaggle](https://www.kaggle.com/datasets/jahysama/animal-crossing-new-horizons-all-villagers/data). A limitation of our dataset is its rather small size. Another issue is that the images have varying resolution. To solve the issue of varying resolution we have added preprocessing of the images such that they are padded with white pixels to make them square and then resized to be 64x64. The backgrounds of many of the images were transparent so we changed them from RGBA to RGB.
 
 - Image format: JPG
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
