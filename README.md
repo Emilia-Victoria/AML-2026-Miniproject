@@ -13,3 +13,13 @@ Our dataset consists of unlabelled images of Animal Crossing villagers collected
 - Image format: JPG
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
 - Dataset size: 392 images
+
+## Model
+
+The model consists of a generator and discriminator.
+
+## Training
+
+## Progress
+
+Initially we trained a very simple DCGAN and by visualizing a few images every 10th epoch during training, we could see that the model suffered from mode collapse. To mitigate this we looked into the Wasserstein GAN.
