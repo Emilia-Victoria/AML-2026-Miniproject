@@ -27,17 +27,17 @@ We have trained the following models:
 - DCGAN
 - WGAN-GP
 
-### DCGAN
+### DCGAN Architecture
 
 Our deep convolutional GAN (DCGAN) follows a standard arhcitecture.
 
-### WGAN-GP
+### WGAN-GP Architecture
 
-For our Wasserstein GAN with gradient penalty (WGAN-GP) we changed the discriminator to a critic that outputs a 
+For our Wasserstein GAN with gradient penalty (WGAN-GP), we changed the discriminator to a critic that outputs a real-valued score instead of a probability. To do this we have removed the batch normalization and the final Sigmoid activation from the discriminator.
 
 ## Training Setup
 
-We have used the following parameters:
+We have used the following parameters for both models:
 
 - Latent dimension: 100
 - Batch size: _
@@ -45,7 +45,21 @@ We have used the following parameters:
 - Learning rate: _
 - Training epochs: _
 
-For the WGAN-GP, the discriminator (critic) was updated multiple times per generator update, and a gradient penalty term was added to stabilize training.
+For each epoch we train the discriminator first followed by training of the generator.
+
+### DCGAN Training
+
+- Loss function: binary cross-entropy loss
+- Optimizer hyperparameters: _
+
+### WGAN-GP Training
+
+For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch, and a gradient penalty term was introduced to stabilize training.
+
+- Loss function: Wasserstein loss
+- Optimizer hyperparameters: _
+- Ratio for critic: 5
+- Lambda for gradients penalty: 10
 
 ## Observations and Results
 
