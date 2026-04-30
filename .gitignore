@@ -3,6 +3,7 @@
 
 # Environments
 .venv
+venv/
 
 # Kaggle downloads
 data/
