@@ -14,7 +14,7 @@ Our dataset consists of unlabelled images of Animal Crossing villagers collected
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
 - Dataset size: 392 images
 
-<div style="display:flex; justify-content:center; gap:20px;">
+<div align="center">
 
   <div style="text-align:center;">
     <img src="imgs/sampleofdataset.png" height="250"><br>
@@ -34,7 +34,7 @@ We chose not to apply direct transformations to the dataset such as flipping or 
 
 Differentiable augmentation applies the same random but differentiable image transformations to both real and generated images during GAN training, allowing gradients to flow through the augmentations. This improves stability and reduces overfitting.
 
-<div style="text-align:center;">
+<div align="center">
     <img src="imgs/DiffAug.png" height="250"><br>
     <span>Sample dataset with differentiable augmentation</span>
   </div>
@@ -96,7 +96,7 @@ For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch
 
 ### Example Outputs
 
-<div style="display:flex; justify-content:center; gap:20px;">
+<div align="center">
 
   <div style="text-align:center;">
     <img src="imgs/dcgan1000epochs.png" height="250"><br>
