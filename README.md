@@ -71,6 +71,8 @@ For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch
 
 ## Observations and Results
 
+### Interpolations
+
 ### Example Outputs
 
 ## Discussion
