@@ -7,3 +7,6 @@
 # Kaggle downloads
 data/
 *.zip
+
+# images
+*.png
