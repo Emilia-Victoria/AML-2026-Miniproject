@@ -86,13 +86,35 @@ For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch
 
 ## Observations and Results
 
+- We see that the discriminator overfits to the dataset without the use of differentiable augmentation, making training of the generator difficult.
+
+- Without the use of differentiable aumentation, we see signs of mode collapse in our DCGAN.
+
 ### Interpolations
 
+
+
 ### Example Outputs
+
+<div style="display:flex; justify-content:center; gap:20px;">
+
+  <div style="text-align:center;">
+    <img src="imgs/dcgan1000epochs.png" height="250"><br>
+    <span>Output of DCGAN after 1000 epochs</span>
+  </div>
+
+  <div style="text-align:center;">
+    <img src="imgs/wgan-gp1000epochs.png" height="250"><br>
+    <span>Output of WGAN-GP after 1000 epochs</span>
+  </div>
+
+</div>
 
 ## Discussion
 
 ## Key Takeaways
+
+- Differentiable augmentation improves stability and helps prevent mode collapse when training on a small dataset.
 
 ## Relevant Litterature
 
