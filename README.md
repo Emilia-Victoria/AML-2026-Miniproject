@@ -20,7 +20,7 @@ We chose not to apply direct transformations to the dataset such as flipping or 
 
 ### Differentiable Augmentation
 
-Differentiable augmentation applies the same differentiable augmentation to both real and  fake images for training of the discriminator and generator.
+Differentiable augmentation applies the same random but differentiable image transformations to both real and generated images during GAN training, allowing gradients to flow through the augmentations. This improves stability and reduces overfitting.
 
 **Insert pretty picture of the augmentation here!!!**
 
@@ -70,6 +70,8 @@ For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch
 - Lambda for gradients penalty: 10
 
 ## Observations and Results
+
+### Interpolations
 
 ### Example Outputs
 
