@@ -10,11 +10,19 @@ This repository contains our miniproject for the course **Advanced Machine Learn
 
 Our dataset consists of unlabelled images of Animal Crossing villagers collected from [kaggle](https://www.kaggle.com/datasets/jahysama/animal-crossing-new-horizons-all-villagers/data). A limitation of our dataset is its relatively small size (392 images), which makes training GANs challenging and prone to overfitting or mode collapse. Another issue is that the images have varying sizes. To address this all images were padded with white pixels to make when square and then resized to 64x64 pixels. Additionally, images with transparent backgrounds were converted from RGBA to RGB to make all backgrounds fully white.
 
-Although data augmentation is often useful, we chose not to apply transformations such as flipping or rotation. Since the images are full-body portraits and many villagers are symmetric,such augmentations would introduce unrealistic samples and potentially harm training.
-
 - Image format: JPG
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
 - Dataset size: 392 images
+
+**Insert pretty picture of selected images!!!**
+
+We chose not to apply direct transformations to the dataset such as flipping or rotation. Since the images are full-body portraits and many villagers are symmetric, such augmentations would introduce unrealistic samples and potentially harm training. Instead we make use of differentiable augmentation.
+
+### Differentiable Augmentation
+
+Differentiable augmentation applies the same differentiable augmentation to both real and  fake images for training of the discriminator and generator.
+
+**Insert pretty picture of the augmentation here!!!**
 
 ## Models and Architectures
 
@@ -68,3 +76,10 @@ For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch
 ## Discussion
 
 ## Key Takeaways
+
+## Relevant Litterature
+
+- Ou, Xunxiong (2024).
+  [*Deep Convolutional Generative Adversarial Networks (DCGAN)-Based Anime Face Generation*](https://www.atlantis-press.com/proceedings/iciaai-24/126004091)
+- Zhao, Shengyu et al. (2020).  
+  [*Differentiable Augmentation for Data-Efficient GAN Training*](https://arxiv.org/abs/2006.10738)
