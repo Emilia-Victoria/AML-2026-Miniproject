@@ -28,6 +28,87 @@ import os
 from pathlib import Path
 from tqdm import tqdm
 from typing import Callable, Optional
+import shutil
+import torchvision.transforms as transforms
+import torchvision.transforms.functional as TF
+
+
+def add_padding(img):
+    """Add white pixels to make image square."""
+    w, h = img.size
+    largest_side = max(w, h)
+
+    pad_left = (largest_side - w) // 2
+    pad_top = (largest_side - h) // 2
+
+    pad_right = largest_side - w - pad_left
+    pad_bottom = largest_side - h - pad_top
+
+    padding = (pad_left, pad_top, pad_right, pad_bottom)
+    return TF.pad(img, padding, fill=255)
+
+
+def preprocess_real_images(
+    real_images_dir: str,
+    output_dir: str,
+    image_size: tuple = (64, 64)
+) -> None:
+    """
+    Resize all images in a directory to consistent dimensions (64x64).
+    Uses same preprocessing as DCGAN training.
+    
+    Args:
+        real_images_dir: Directory containing real images
+        output_dir: Directory to save resized images
+        image_size: Target size as (height, width) - default 64x64 for DCGAN
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Get all image files
+    image_files = [f for f in os.listdir(real_images_dir) 
+                   if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
+    
+    print(f"Resizing {len(image_files)} images to {image_size}...")
+    
+    transform = transforms.Compose([
+        transforms.Resize(image_size),
+        transforms.ToTensor(),
+        transforms.Normalize([0.5]*3, [0.5]*3)
+    ])
+    
+    for img_file in tqdm(image_files, desc="Preprocessing images", leave=False):
+        try:
+            img_path = os.path.join(real_images_dir, img_file)
+            img = Image.open(img_path)
+            
+            # Handle transparent background
+            if img.mode == "RGBA":
+                bg = Image.new("RGB", img.size, (255, 255, 255))
+                bg.paste(img, mask=img.split()[3])
+                img = bg
+            else:
+                img = img.convert("RGB")
+            
+            # Add padding to make image square
+            square_img = add_padding(img)
+            
+            # Apply transforms and convert back to PIL for saving
+            img_tensor = transform(square_img)
+            
+            # Convert tensor back to PIL image for saving
+            # Denormalize: (x * 0.5 + 0.5)
+            img_tensor = (img_tensor + 1) / 2
+            img_tensor = torch.clamp(img_tensor, 0, 1)
+            
+            img_np = img_tensor.permute(1, 2, 0).numpy()
+            img_np = (img_np * 255).astype(np.uint8)
+            img_pil = Image.fromarray(img_np)
+            
+            # Save resized image
+            output_path = os.path.join(output_dir, img_file)
+            img_pil.save(output_path)
+        except Exception as e:
+            print(f"Warning: Could not process {img_file}: {e}")
 
 
 def generate_images_to_directory(
@@ -90,7 +171,8 @@ def compute_fid_from_checkpoint(
     latent_dim: int = 100,
     device: str = 'cuda',
     batch_size: int = 32,
-    temp_dir: Optional[str] = None
+    temp_dir: Optional[str] = None,
+    image_size: tuple = (64, 64)
 ) -> float:
     """
     Compute FID score for a generator checkpoint.
@@ -104,12 +186,17 @@ def compute_fid_from_checkpoint(
         device: Device to run on
         batch_size: Batch size for generation
         temp_dir: Temporary directory for generated images (default: /tmp/fid_gen)
+        image_size: Target image size as (height, width) - default 64x64 for DCGAN/WGAN
     
     Returns:
         fid_score: FID score (lower is better)
     """
     if temp_dir is None:
         temp_dir = '/tmp/fid_gen' if os.name != 'nt' else './fid_gen'
+    
+    # Preprocess real images to consistent size (64x64 to match training)
+    processed_real_dir = os.path.join(temp_dir, 'real_processed')
+    preprocess_real_images(real_images_dir, processed_real_dir, image_size)
     
     # Load generator
     print(f"Loading checkpoint: {checkpoint_path}")
@@ -126,21 +213,21 @@ def compute_fid_from_checkpoint(
     
     # Generate images
     print(f"Generating {num_samples} images...")
+    generated_dir = os.path.join(temp_dir, 'generated')
     generate_images_to_directory(
-        generator, temp_dir, num_samples, latent_dim, batch_size, device
+        generator, generated_dir, num_samples, latent_dim, batch_size, device
     )
     
     # Compute FID
     print(f"Computing FID score...")
     fid_score = calculate_fid_given_paths(
-        [real_images_dir, temp_dir],
+        [processed_real_dir, generated_dir],
         batch_size=batch_size,
         device=device,
         dims=2048
     )
     
     # Cleanup
-    import shutil
     shutil.rmtree(temp_dir)
     
     return fid_score
