@@ -81,7 +81,8 @@ For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch
 
 - Ou, Xunxiong (2024).
   [*Deep Convolutional Generative Adversarial Networks (DCGAN)-Based Anime Face Generation*](https://www.atlantis-press.com/proceedings/iciaai-24/126004091)
-- Zhao, Shengyu et al. (2020).  
-  [*Differentiable Augmentation for Data-Efficient GAN Training*](https://arxiv.org/abs/2006.10738)
+- Zhao, Shengyu et al. (2020). [*Differentiable Augmentation for Data-Efficient GAN Training*](https://arxiv.org/abs/2006.10738)
+- Gulrajani, Ishaan et al. (2017).
+[Improved Training of Wasserstein GANs](https://arxiv.org/pdf/1704.00028)  
 - [GAN — Wasserstein GAN & WGAN-GP](https://jonathan-hui.medium.com/gan-wasserstein-gan-wgan-gp-6a1a2aa1b490) (Medium article)
 - [Tackling Mode Collapse in GANs: From DCGAN to WGAN-GP](https://aneelabashir425.medium.com/medium-article-tackling-mode-collapse-in-gans-from-dcgan-to-wgan-gp-0b31c7ac3692) (Medium article)
