@@ -14,7 +14,10 @@ Our dataset consists of unlabelled images of Animal Crossing villagers collected
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
 - Dataset size: 392 images
 
-**Insert pretty picture of selected images!!!**
+<div align="center">
+  <img src="imgs/sampleofdataset.png" height="250" />
+  <img src="imgs/post-preprocessing.png" height="250" />
+</div>
 
 We chose not to apply direct transformations to the dataset such as flipping or rotation. Since the images are full-body portraits and many villagers are symmetric, such augmentations would introduce unrealistic samples and potentially harm training. Instead we make use of differentiable augmentation.
 
@@ -22,7 +25,9 @@ We chose not to apply direct transformations to the dataset such as flipping or 
 
 Differentiable augmentation applies the same random but differentiable image transformations to both real and generated images during GAN training, allowing gradients to flow through the augmentations. This improves stability and reduces overfitting.
 
-**Insert pretty picture of the augmentation here!!!**
+<div align="center">
+  <img src="imgs/DiffAug.png" height="250" />
+</div>
 
 ## Models and Architectures
 
