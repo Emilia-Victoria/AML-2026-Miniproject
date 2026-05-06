@@ -17,12 +17,12 @@ Our dataset consists of unlabelled images of Animal Crossing villagers collected
 <div align="center">
 
   <div style="text-align:center;">
-    <img src="imgs/sampleofdataset.png" height="250"><br>
+    <img src="imgs/sampleofdataset.png" width="500"><br>
     <span>Original dataset</span>
   </div>
 
   <div style="text-align:center;">
-    <img src="imgs/post-preprocessing.png" height="250"><br>
+    <img src="imgs/post-preprocessing.png" width="500"><br>
     <span>After preprocessing</span>
   </div>
 
@@ -35,7 +35,7 @@ We chose not to apply direct transformations to the dataset such as flipping or 
 Differentiable augmentation applies the same random but differentiable image transformations to both real and generated images during GAN training, allowing gradients to flow through the augmentations. This improves stability and reduces overfitting.
 
 <div align="center">
-    <img src="imgs/DiffAug.png" height="250"><br>
+    <img src="imgs/DiffAug.png" width="500"><br>
     <span>Sample dataset with differentiable augmentation</span>
   </div>
 
@@ -107,27 +107,63 @@ We trained four different GAN models and used FID to compare the results of the 
 - With diffaug we see way better results for both models. Looking at our FID-scores the diffaug versions clearly perform better than their respective alternatives from the start and through the training.
 - Our WGAN with diffaug gets a FID score of 72.69 after 4000 epochs. Then training somewhat stagnates with a best score of 68.92 after 9400 epochs and a final score of 72.2 after 10000 epochs.
 
+  <div align="center">
+
+    <div style="text-align:center;">
+      <img src="imgs/FIDgraph.png" width="500"><br>
+      <span>FID graph for the four models over their span of epochs</span>
+    </div>
+  </div>
+
 - Training loss
   - Our worst performing DCGAN (the one that does not use diffaug) clearly has the discriminator create a way too high loss for the generator, resulting in the generator receiving bad training. We see some huge spikes in the training loss, resulting in mode collapse.
+
+  <div align="center">
+
+    <div style="text-align:center;">
+      <img src="imgs/dcgan_nodiffaug_trainingloss.png" width="500"><br>
+      <span>dcgan_nodiffaug_trainingloss</span>
+    </div>
+  </div>
   - Our best WGAN model (using diffaug) seems to have a somewhat more "fair" ongoing battle between the generator and the discriminator the entire way through. While the FID scores show that the improvement of the generator stagnates, mode collapse is avoided.
+
+  <div align="center">
+
+    <div style="text-align:center;">
+      <img src="imgs/wgan_withdiffaug_trainingloss.png" width="500"><br>
+      <span>wgan_withdiffaug_trainingloss</span>
+    </div>
+  </div>
 
 ### Interpolations
 
 - We made a visualizer to help us inspect the latent-space from the generators. We used this to inspect the latent-space of our best model (wgan with diffaug). Due to the latent-dim being 300 it seems that a lot of the parameters doesn't have a big influence on the image and some parameters seem to have the same effect, which could mean that we could have gone for a smaller latent dimension. We did however see a few dimensions that have a clear and narrow effect to the villager:
 
-¤¤¤ INSERT PICTURES ¤¤¤
+<div align="center">
+
+  <div style="text-align:center;">
+    <img src="imgs/interpolations1.png" width="500"><br>
+    <span>Latent dim 295 shows a transition from big head to small head</span>
+  </div>
+
+  <div style="text-align:center;">
+    <img src="imgs/interpolations2.png" width="500"><br>
+    <span>Latent dim 148 shows a transition from looking sideways to looking straight</span>
+  </div>
+
+</div>
 
 ### Example Outputs
 
 <div align="center">
 
   <div style="text-align:center;">
-    <img src="imgs/dcgan1000epochs.png" height="250"><br>
+    <img src="imgs/dcgan1000epochs.png" width="500"><br>
     <span>Output of DCGAN after 1000 epochs</span>
   </div>
 
   <div style="text-align:center;">
-    <img src="imgs/wgan-gp1000epochs.png" height="250"><br>
+    <img src="imgs/wgan-gp1000epochs.png" width="500"><br>
     <span>Output of WGAN-GP after 1000 epochs</span>
   </div>
 

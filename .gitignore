@@ -8,5 +8,4 @@
 data/
 *.zip
 
-# images
-*.png
+fid_gen/
