@@ -64,7 +64,7 @@ We have used the following parameters for both models:
 
 - Latent dimension: 300
 - Batch size: 32
-- Optimizer: Adam with hyperparameters
+- Optimizer: Adam
 - Training epochs: from 2000-10000 (dependent on time constraints)
 
 For each epoch we train the discriminator first followed by training of the generator.
@@ -95,28 +95,28 @@ We used Fréchet inception distance (FID) to compare the results of the models. 
 
 ## Experiments
 
-We trained four different GAN models and used FID to compare the results of the different models. We trained two DCGANs, one with and one without diffaug. We trained two WGANs, one with and one without diffaug. Further details on hyperparameters can be seen in "training setup". We also looked at the training loss and generated pictures at different epochs to try to find out what happened during training.
+We trained the DCGAN and WGAN-GP both with and without using differentiable augmentation and used FID to compare the results of the different models. Further details on hyperparameters can be seen in "training setup". We also looked at the training loss and generated pictures at different epochs to try to find out what happens during training.
 
 ## Observations and Results
 
 - We see that the discriminator overfits to the dataset without the use of differentiable augmentation, making training of the generator difficult.
-  For the DCGAN without diffaug, we see that the discriminator gets too good too fast. This results in the generator receiving some huge losses and becoming worse at generating the intended images. To mitigate this, it starts mode collapsing, generating a very specific type of picture.
 
-- Without the use of differentiable augmentation(diffaug), we see signs of mode collapse in our DCGAN.
+- Without the use of differentiable augmentation, we see signs of mode collapse in our DCGAN.
 
-- With diffaug we see way better results for both models. Looking at our FID-scores the diffaug versions clearly perform better than their respective alternatives from the start and through the training.
-- Our WGAN with diffaug gets a FID score of 72.69 after 4000 epochs. Then training somewhat stagnates with a best score of 68.92 after 9400 epochs and a final score of 72.2 after 10000 epochs.
+- Using differentiable augmentation, we see improved results for both models. Looking at our FID-scores the diffaug versions clearly perform better than their respective alternatives from the start and throughout the training.
+
+- Our WGAN-GP with diffaug gets a FID score of 72.69 after 4000 epochs. Then training somewhat stagnates with a best score of 68.92 after 9400 epochs and a final score of 72.2 after 10000 epochs.
 
   <div align="center">
 
     <div style="text-align:center;">
       <img src="imgs/FIDgraph.png" width="500"><br>
-      <span>FID graph for the four models over their span of epochs</span>
+      <span>FID graph of the models across their training epochs</span>
     </div>
   </div>
 
 - Training loss
-  - Our worst performing DCGAN (the one that does not use diffaug) clearly has the discriminator create a way too high loss for the generator, resulting in the generator receiving bad training. We see some huge spikes in the training loss, resulting in mode collapse.
+  - Our worst-performing DCGAN (the one that does not use diffaug) clearly has a discriminator that produces a loss that is too high for the generator, resulting in poor training of the generator. We observe several large spikes in the training loss, leading to mode collapse.
 
   <div align="center">
 
@@ -125,7 +125,8 @@ We trained four different GAN models and used FID to compare the results of the 
       <span>dcgan_nodiffaug_trainingloss</span>
     </div>
   </div>
-  - Our best WGAN model (using diffaug) seems to have a somewhat more "fair" ongoing battle between the generator and the discriminator the entire way through. While the FID scores show that the improvement of the generator stagnates, mode collapse is avoided.
+  
+  - Our best WGAN-GP model (using diffaug) appears to maintain a more balanced min-max game between the generator and the discriminator throughout training. While the FID scores show that the generator's improvement stagnates, the model shows no signs of mode collapse.
 
   <div align="center">
 
@@ -137,7 +138,7 @@ We trained four different GAN models and used FID to compare the results of the 
 
 ### Interpolations
 
-- We made a visualizer to help us inspect the latent-space from the generators. We used this to inspect the latent-space of our best model (wgan with diffaug). Due to the latent-dim being 300 it seems that a lot of the parameters doesn't have a big influence on the image and some parameters seem to have the same effect, which could mean that we could have gone for a smaller latent dimension. We did however see a few dimensions that have a clear and narrow effect to the villager:
+- We made a visualizer to help us inspect the latent space of the generators. We used this to inspect the latent space of our best model (WGAN-GP with DiffAug). Due to the latent dimensionality being 300, it appears that many of the parameters have little influence on the generated image and some parameters seem to produce similar effects. This suggests that we could have gone for a smaller latent dimension. We did however see a few dimensions that have a clear and narrow effect to the villager:
 
 <div align="center">
 
@@ -179,7 +180,7 @@ FID was a nice tool to use to get a metric to assess the quality of the models. 
 
 ## Use of Generative AI
 
-For good measure it is worth mentioning, that while all the workflows in the notebooks, the process of our training and structure of our project is made by us. Some of the code itself has been produced with the help of ChatGPT and/or other LLM's.
+For good measure it is worth mentioning that, while all workflows in the notebooks, the training process, and the structure of our project is made by us, some portions of the code were produced with the help of ChatGPT and/or other LLMs.
 
 ## Relevant Litterature
 
