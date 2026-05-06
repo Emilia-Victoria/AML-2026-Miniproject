@@ -168,7 +168,7 @@ def compute_fid_from_checkpoint(
     generator_class: Callable,
     real_images_dir: str,
     num_samples: int = 1000,
-    latent_dim: int = 100,
+    latent_dim: int = 300,
     device: str = 'cuda',
     batch_size: int = 32,
     temp_dir: Optional[str] = None,
@@ -237,7 +237,7 @@ def evaluate_all_checkpoints_simple(
     checkpoint_dirs: dict,
     generator_classes: dict,
     real_images_dir: str,
-    latent_dim: int = 100,
+    latent_dim: int = 300,
     num_samples: int = 1000,
     device: str = 'cuda'
 ) -> dict:
@@ -281,7 +281,7 @@ def evaluate_all_checkpoints_simple(
                 )
                 model_results[checkpoint_file] = fid_score
                 print(f"✓ FID: {fid_score:.4f}")
-            except Exception as e:
+            except Exception as e:  
                 print(f"✗ Error: {e}")
                 model_results[checkpoint_file] = None
         
