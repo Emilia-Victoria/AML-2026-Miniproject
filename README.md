@@ -158,13 +158,13 @@ We trained four different GAN models and used FID to compare the results of the 
 <div align="center">
 
   <div style="text-align:center;">
-    <img src="imgs/dcgan1000epochs.png" width="500"><br>
-    <span>Output of DCGAN after 1000 epochs</span>
+    <img src="imgs/dc_withdiffaug_10000.png" width="500"><br>
+    <span>Output of DCGAN with diffaug after 10000 epochs</span>
   </div>
 
   <div style="text-align:center;">
-    <img src="imgs/wgan-gp1000epochs.png" width="500"><br>
-    <span>Output of WGAN-GP after 1000 epochs</span>
+    <img src="imgs/wgan_withdiffaug_10000.png" width="500"><br>
+    <span>Output of WGAN-GP with diffaug after 10000 epochss</span>
   </div>
 
 </div>
