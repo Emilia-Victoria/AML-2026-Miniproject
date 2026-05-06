@@ -10,15 +10,38 @@ This repository contains our miniproject for the course **Advanced Machine Learn
 
 Our dataset consists of unlabelled images of Animal Crossing villagers collected from [kaggle](https://www.kaggle.com/datasets/jahysama/animal-crossing-new-horizons-all-villagers/data). A limitation of our dataset is its relatively small size (392 images), which makes training GANs challenging and prone to overfitting or mode collapse. Another issue is that the images have varying sizes. To address this all images were padded with white pixels to make when square and then resized to 64x64 pixels. Additionally, images with transparent backgrounds were converted from RGBA to RGB to make all backgrounds fully white.
 
-Although data augmentation is often useful, we chose not to apply transformations such as flipping or rotation. Since the images are full-body portraits and many villagers are symmetric,such augmentations would introduce unrealistic samples and potentially harm training.
-
 - Image format: JPG
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
 - Dataset size: 392 images
 
+<div align="center">
+
+  <div style="text-align:center;">
+    <img src="imgs/sampleofdataset.png" height="250"><br>
+    <span>Original dataset</span>
+  </div>
+
+  <div style="text-align:center;">
+    <img src="imgs/post-preprocessing.png" height="250"><br>
+    <span>After preprocessing</span>
+  </div>
+
+</div>
+
+We chose not to apply direct transformations to the dataset such as flipping or rotation. Since the images are full-body portraits and many villagers are symmetric, such augmentations would introduce unrealistic samples and potentially harm training. Instead we make use of differentiable augmentation.
+
+### Differentiable Augmentation
+
+Differentiable augmentation applies the same random but differentiable image transformations to both real and generated images during GAN training, allowing gradients to flow through the augmentations. This improves stability and reduces overfitting.
+
+<div align="center">
+    <img src="imgs/DiffAug.png" height="250"><br>
+    <span>Sample dataset with differentiable augmentation</span>
+  </div>
+
 ## Models and Architectures
 
-The standard GAN consists of a disciminator and a generator, trained in an adversarial manner. The discriminator is trained to differentiate between real and synthetic input, while the generator tries to generate output that fools the discriminator.
+The standard GAN consists of a discriminator and a generator, trained in an adversarial manner. The discriminator is trained to differentiate between real and synthetic input, while the generator tries to generate output that fools the discriminator.
 
 ### Models
 
@@ -27,30 +50,108 @@ We have trained the following models:
 - DCGAN
 - WGAN-GP
 
-### DCGAN
+### DCGAN Architecture
 
-Our deep convolutional GAN (DCGAN) follows a standard arhcitecture.
+Our deep convolutional GAN (DCGAN) follows a standard architecture.
 
-### WGAN-GP
+### WGAN-GP Architecture
 
-For our Wasserstein GAN with gradient penalty (WGAN-GP) we changed the discriminator to a critic that outputs a 
+For our Wasserstein GAN with gradient penalty (WGAN-GP), we changed the discriminator to a critic that outputs a real-valued score instead of a probability. To do this we have removed the batch normalization and the final Sigmoid activation from the discriminator.
 
 ## Training Setup
 
-We have used the following parameters:
+We have used the following parameters for both models:
 
-- Latent dimension: 100
-- Batch size: _
-- Optimizer: Adam
-- Learning rate: _
-- Training epochs: _
+- Latent dimension: 300
+- Batch size: 32
+- Optimizer: Adam with hyperparameters
+- Training epochs: from 2000-10000 (dependent on time constraints)
 
-For the WGAN-GP, the discriminator (critic) was updated multiple times per generator update, and a gradient penalty term was added to stabilize training.
+For each epoch we train the discriminator first followed by training of the generator.
+
+### DCGAN Training
+
+- Loss function: binary cross-entropy loss
+- Optimizer hyperparameters:
+  - ADAM betas: 0.5, 0.999
+  - discriminator learning rate: 0.0003
+  - generator learning rate: 0.0001
+
+### WGAN-GP Training
+
+For the WGAN-GP, the discriminator (critic) was updated multiple times per epoch, and a gradient penalty term was introduced to stabilize training.
+
+- Loss function: Wasserstein loss
+- Optimizer hyperparameters:
+  - ADAM betas: 0.5, 0.999
+  - Discriminator learning rate: 0.0003
+  - Generator learning rate: 0.0001
+  - Ratio for critic: 5
+  - Lambda for gradients penalty: 10
+
+## FID Fréchet inception distance
+
+We used Fréchet inception distance (FID) to compare the results of the models. It gives a score that reflects how close the generated images are to the original images that we train the model on.
+
+## Experiments
+
+We trained four different GAN models and used FID to compare the results of the different models. We trained two DCGANs, one with and one without diffaug. We trained two WGANs, one with and one without diffaug. Further details on hyperparameters can be seen in "training setup". We also looked at the training loss and generated pictures at different epochs to try to find out what happened during training.
 
 ## Observations and Results
 
+- We see that the discriminator overfits to the dataset without the use of differentiable augmentation, making training of the generator difficult.
+  For the DCGAN without diffaug, we see that the discriminator gets too good too fast. This results in the generator receiving some huge losses and becoming worse at generating the intended images. To mitigate this, it starts mode collapsing, generating a very specific type of picture.
+
+- Without the use of differentiable augmentation(diffaug), we see signs of mode collapse in our DCGAN.
+
+- With diffaug we see way better results for both models. Looking at our FID-scores the diffaug versions clearly perform better than their respective alternatives from the start and through the training.
+- Our WGAN with diffaug gets a FID score of 72.69 after 4000 epochs. Then training somewhat stagnates with a best score of 68.92 after 9400 epochs and a final score of 72.2 after 10000 epochs.
+
+- Training loss
+  - Our worst performing DCGAN (the one that does not use diffaug) clearly has the discriminator create a way too high loss for the generator, resulting in the generator receiving bad training. We see some huge spikes in the training loss, resulting in mode collapse.
+  - Our best WGAN model (using diffaug) seems to have a somewhat more "fair" ongoing battle between the generator and the discriminator the entire way through. While the FID scores show that the improvement of the generator stagnates, mode collapse is avoided.
+
+### Interpolations
+
+- We made a visualizer to help us inspect the latent-space from the generators. We used this to inspect the latent-space of our best model (wgan with diffaug). Due to the latent-dim being 300 it seems that a lot of the parameters doesn't have a big influence on the image and some parameters seem to have the same effect, which could mean that we could have gone for a smaller latent dimension. We did however see a few dimensions that have a clear and narrow effect to the villager:
+
+¤¤¤ INSERT PICTURES ¤¤¤
+
 ### Example Outputs
+
+<div align="center">
+
+  <div style="text-align:center;">
+    <img src="imgs/dcgan1000epochs.png" height="250"><br>
+    <span>Output of DCGAN after 1000 epochs</span>
+  </div>
+
+  <div style="text-align:center;">
+    <img src="imgs/wgan-gp1000epochs.png" height="250"><br>
+    <span>Output of WGAN-GP after 1000 epochs</span>
+  </div>
+
+</div>
 
 ## Discussion
 
-## Key Takeaways
+FID was a nice tool to use to get a metric to assess the quality of the models. Other methods like Inception Score and subjective assessment could also have been relevant.
+
+### Key Takeaways
+
+- Differentiable augmentation improves training stability and helps prevent mode collapse when training on a small dataset.
+
+## Use of Generative AI
+
+For good measure it is worth mentioning, that while all the workflows in the notebooks, the process of our training and structure of our project is made by us. Some of the code itself has been produced with the help of ChatGPT and/or other LLM's.
+
+## Relevant Litterature
+
+- Ou, Xunxiong (2024).
+  [_Deep Convolutional Generative Adversarial Networks (DCGAN)-Based Anime Face Generation_](https://www.atlantis-press.com/proceedings/iciaai-24/126004091)
+- Zhao, Shengyu et al. (2020). [_Differentiable Augmentation for Data-Efficient GAN Training_](https://arxiv.org/abs/2006.10738)
+- Gulrajani, Ishaan et al. (2017).
+  [Improved Training of Wasserstein GANs](https://arxiv.org/pdf/1704.00028)
+- [GAN — Wasserstein GAN & WGAN-GP](https://jonathan-hui.medium.com/gan-wasserstein-gan-wgan-gp-6a1a2aa1b490) (Medium article)
+- [Tackling Mode Collapse in GANs: From DCGAN to WGAN-GP](https://aneelabashir425.medium.com/medium-article-tackling-mode-collapse-in-gans-from-dcgan-to-wgan-gp-0b31c7ac3692) (Medium article)
+- [GAN hyperparameter tuning](https://apxml.com/courses/generative-adversarial-networks-gans/chapter-7-gan-implementation-optimization/hyperparameter-tuning-gans)
