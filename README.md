@@ -125,7 +125,6 @@ We trained the DCGAN and WGAN-GP both with and without using differentiable augm
       <span>dcgan_nodiffaug_trainingloss</span>
     </div>
   </div>
-  
   - Our best WGAN-GP model (using diffaug) appears to maintain a more balanced min-max game between the generator and the discriminator throughout training. While the FID scores show that the generator's improvement stagnates, the model shows no signs of mode collapse.
 
   <div align="center">
@@ -172,11 +171,12 @@ We trained the DCGAN and WGAN-GP both with and without using differentiable augm
 
 ## Discussion
 
-FID was a nice tool to use to get a metric to assess the quality of the models. Other methods like Inception Score and subjective assessment could also have been relevant.
+- FID was a nice tool to use to get a metric to assess the quality of the models. Other methods like Inception Score and subjective assessment could also have been relevant.
+- It is hard to find the best latent space, model architecture and hyperparameters for a problem. It seems like an endless assignment to go through different variations. Using automatic tools for some of it could be interesting.
 
 ### Key Takeaways
 
-- Differentiable augmentation improves training stability and helps prevent mode collapse when training on a small dataset.
+- Differentiable augmentation improves training stability and helps prevent mode collapse when training on a small dataset. Helps mitigate mode collapse.
 
 ## Use of Generative AI
 
