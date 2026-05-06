@@ -9,3 +9,5 @@ data/
 *.zip
 
 fid_gen/
+
+__pycache__/
