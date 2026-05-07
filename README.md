@@ -8,7 +8,7 @@ This repository contains our miniproject for the course **Advanced Machine Learn
 
 ## Dataset
 
-Our dataset consists of unlabelled images of Animal Crossing villagers collected from [kaggle](https://www.kaggle.com/datasets/jahysama/animal-crossing-new-horizons-all-villagers/data). A limitation of our dataset is its relatively small size (392 images), which makes training GANs challenging and prone to overfitting or mode collapse. Another issue is that the images have varying sizes. To address this all images were padded with white pixels to make when square and then resized to 64x64 pixels. Additionally, images with transparent backgrounds were converted from RGBA to RGB to make all backgrounds fully white.
+Our dataset consists of unlabeled images of Animal Crossing villagers collected from [kaggle](https://www.kaggle.com/datasets/jahysama/animal-crossing-new-horizons-all-villagers/data). A limitation of our dataset is its relatively small size (392 images), which makes training GANs challenging and prone to overfitting or mode collapse. Another issue is that the images have varying sizes. To address this all images were padded with white pixels to make when square and then resized to 64x64 pixels. Additionally, images with transparent backgrounds were converted from RGBA to RGB to make all backgrounds fully white.
 
 - Image format: JPG
 - Image resolution: Varies. Avg width: 216.67. Avg height: 348.82
@@ -125,6 +125,7 @@ We trained the DCGAN and WGAN-GP both with and without using differentiable augm
       <span>dcgan_nodiffaug_trainingloss</span>
     </div>
   </div>
+
   - Our best WGAN-GP model (using diffaug) appears to maintain a more balanced min-max game between the generator and the discriminator throughout training. While the FID scores show that the generator's improvement stagnates, the model shows no signs of mode collapse.
 
   <div align="center">
@@ -164,31 +165,36 @@ We trained the DCGAN and WGAN-GP both with and without using differentiable augm
 
   <div style="text-align:center;">
     <img src="imgs/wgan_withdiffaug_10000.png" width="500"><br>
-    <span>Output of WGAN-GP with diffaug after 10000 epochss</span>
+    <span>Output of WGAN-GP with diffaug after 10000 epochs</span>
   </div>
 
 </div>
 
 ## Discussion
 
-- FID was a nice tool to use to get a metric to assess the quality of the models. Other methods like Inception Score and subjective assessment could also have been relevant.
-- It is hard to find the best latent space, model architecture and hyperparameters for a problem. It seems like an endless assignment to go through different variations. Using automatic tools for some of it could be interesting.
+- FID is a nice tool to use to get a metric to assess the quality of the models. Other methods such as Inception Score and subjective assessment could also have been relevant. Introducing the FID score to our project did surprise us, as we saw that our model hit a threshold, where it did not seem to improve at all, even though when looking at the images subjectively, the model seemed to get better. This result made it clear to us, that different metrics for testing the quality would have been crucial to get more insight into the improvement happening to our models while training.
+- It is hard to find the best latent space, model architecture, and hyperparameters for a problem. It seems like an endless assignment to go through different variations. Using automatic tools for some of it could be interesting.
+- Since the addition of diffaug seemed to improve our models significantly, it could be interesting to look at more and/or different differentiable augmentations than the ones we introduced, which were the same used in [2]. The article mentioned more alternatives, such as random rotation, scaling, or shearing.
+- The architectures of our models is inspired by an earlier project made by Emilia, where some of the layers and activations, as well as optimization has been tweaked to fit our project. We did try to implement an alternative to this architecture that was inspired by the architecture described in *(DCGAN)-Based Anime Face Generation*[1], but the model performed significantly worse than our previous models, so we decided to focus on the first version.
+- A lot of our project have been experimentation of tweaking hyperparameters and architectures in an unsystematic way. For future projects it would be beneficial to implement some more professional techniques to optimize these parameters efficiently and structurally.
 
 ### Key Takeaways
 
-- Differentiable augmentation improves training stability and helps prevent mode collapse when training on a small dataset. Helps mitigate mode collapse.
+- Our best models performed far better than we imagined at the start, but there is still a long way to the goal of generating believable new villagers.
+- Overall a more structured approach to the project could have been beneficial
+- Differentiable augmentation improves training stability and helps prevent mode collapse when training on a small dataset.
 
 ## Use of Generative AI
 
 For good measure it is worth mentioning that, while all workflows in the notebooks, the training process, and the structure of our project is made by us, some portions of the code were produced with the help of ChatGPT and/or other LLMs.
 
-## Relevant Litterature
+## Relevant Literature
 
-- Ou, Xunxiong (2024).
+1. Ou, Xunxiong (2024).
   [_Deep Convolutional Generative Adversarial Networks (DCGAN)-Based Anime Face Generation_](https://www.atlantis-press.com/proceedings/iciaai-24/126004091)
-- Zhao, Shengyu et al. (2020). [_Differentiable Augmentation for Data-Efficient GAN Training_](https://arxiv.org/abs/2006.10738)
-- Gulrajani, Ishaan et al. (2017).
+2. Zhao, Shengyu et al. (2020). [_Differentiable Augmentation for Data-Efficient GAN Training_](https://arxiv.org/abs/2006.10738)
+3. Gulrajani, Ishaan et al. (2017).
   [Improved Training of Wasserstein GANs](https://arxiv.org/pdf/1704.00028)
-- [GAN — Wasserstein GAN & WGAN-GP](https://jonathan-hui.medium.com/gan-wasserstein-gan-wgan-gp-6a1a2aa1b490) (Medium article)
-- [Tackling Mode Collapse in GANs: From DCGAN to WGAN-GP](https://aneelabashir425.medium.com/medium-article-tackling-mode-collapse-in-gans-from-dcgan-to-wgan-gp-0b31c7ac3692) (Medium article)
-- [GAN hyperparameter tuning](https://apxml.com/courses/generative-adversarial-networks-gans/chapter-7-gan-implementation-optimization/hyperparameter-tuning-gans)
+4. [GAN — Wasserstein GAN & WGAN-GP](https://jonathan-hui.medium.com/gan-wasserstein-gan-wgan-gp-6a1a2aa1b490) (Medium article)
+5. [Tackling Mode Collapse in GANs: From DCGAN to WGAN-GP](https://aneelabashir425.medium.com/medium-article-tackling-mode-collapse-in-gans-from-dcgan-to-wgan-gp-0b31c7ac3692) (Medium article)
+6. [GAN hyperparameter tuning](https://apxml.com/courses/generative-adversarial-networks-gans/chapter-7-gan-implementation-optimization/hyperparameter-tuning-gans)
